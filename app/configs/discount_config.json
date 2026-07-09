@@ -1,0 +1,61 @@
+{
+  "customer_tiers": {
+    "REGULAR": {
+      "slabs": [
+        {
+          "min": 0,
+          "max": 5000,
+          "discount": 0
+        },
+        {
+          "min": 5000,
+          "max": 10000,
+          "discount": 10
+        },
+        {
+          "min": 10000,
+          "max": null,
+          "discount": 20
+        }
+      ]
+    },
+
+    "PREMIUM": {
+      "slabs": [
+        {
+          "min": 0,
+          "max": 5000,
+          "discount": 10
+        },
+        {
+          "min": 5000,
+          "max": 10000,
+          "discount": 20
+        },
+        {
+          "min": 10000,
+          "max": null,
+          "discount": 30
+        }
+      ]
+    }
+  },
+
+  "discount_priority": [
+    "SLAB",
+    "PROMOTION",
+    "COUPON",
+    "CATEGORY",
+    "HAPPY_HOUR",
+    "BUY_X_GET_Y"
+  ],
+
+  "maximum_discount_percentage": 40,
+
+  "happy_hour": {
+    "enabled": true,
+    "start": "17:00",
+    "end": "20:00",
+    "discount": 5
+  }
+}
