@@ -2,9 +2,9 @@
 
 ## Overview
 
-The ShopperStop Promotional Pricing Engine is a RESTful backend application developed using FastAPI. It provides a flexible discount calculation engine that allows retailers to configure and apply different types of promotional discounts without changing application code.
+The ShopperStop Promotional Pricing Engine is a RESTful backend application developed using FastAPI. It provides a flexible and extensible discount calculation engine that allows retailers to configure and apply different promotional discounts without changing application code.
 
-The system supports customer-tier discounts, promotional campaigns, coupons, simulation of discounts, configurable business rules, and detailed bill calculation.
+The system supports customer-tier discounts, promotional campaigns, coupons, simulation of discounts, configurable business rules, health monitoring, logging, and detailed bill calculation.
 
 ---
 
@@ -14,8 +14,8 @@ The system supports customer-tier discounts, promotional campaigns, coupons, sim
 
 - Progressive slab-based discount calculation
 - Customer Tier support
-    - Regular
-    - Premium
+  - Regular
+  - Premium
 - Detailed discount breakdown
 - Savings summary
 - Bill ID generation
@@ -44,7 +44,7 @@ The system supports customer-tier discounts, promotional campaigns, coupons, sim
 
 ### Simulation
 
-- Preview discount calculation without generating a bill.
+- Preview discount calculation without generating a bill
 
 ### Additional Discounts
 
@@ -52,6 +52,12 @@ The system supports customer-tier discounts, promotional campaigns, coupons, sim
 - Coupon Discounts
 - Happy Hour Discount
 - Maximum Discount Cap
+
+### Configuration
+
+- Configurable discount settings using JSON
+- Customer Tier configuration
+- Maximum Discount Cap configuration
 
 ### Health Monitoring
 
@@ -75,11 +81,35 @@ The system supports customer-tier discounts, promotional campaigns, coupons, sim
 - Python 3.12
 - FastAPI
 - SQLAlchemy
-- SQLite
+- SQLite (Embedded Database)
 - Pydantic
 - Uvicorn
 - Pytest
 - Docker
+
+---
+
+## Architecture
+
+The application follows a layered architecture.
+
+```
+Client
+   │
+   ▼
+FastAPI Routers
+   │
+   ▼
+Service Layer
+   │
+   ▼
+Discount Engine
+   │
+   ▼
+SQLite Database
+```
+
+This architecture separates routing, business logic, validation, and persistence, making the application modular, maintainable, and easy to extend.
 
 ---
 
@@ -100,9 +130,7 @@ SHOPPER_STOP
 │   └── main.py
 │
 ├── tests
-│
 ├── logs
-│
 ├── requirements.txt
 ├── Dockerfile
 ├── docker-compose.yml
@@ -114,33 +142,33 @@ SHOPPER_STOP
 
 ## Installation
 
-Clone the repository
+Clone the repository.
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/pranavi-choudarapally/ShopperStop-Promotional-Pricing-Engine.git
 ```
 
-Move into the project
+Move into the project.
 
 ```bash
-cd Shopper_Stop
+cd ShopperStop-Promotional-Pricing-Engine
 ```
 
-Create Virtual Environment
+Create a virtual environment.
 
 ```bash
 python -m venv venv
 ```
 
-Activate Virtual Environment
+Activate the virtual environment.
 
-Windows
+### Windows
 
 ```bash
 venv\Scripts\activate
 ```
 
-Install dependencies
+Install dependencies.
 
 ```bash
 pip install -r requirements.txt
@@ -160,12 +188,26 @@ Swagger UI
 http://127.0.0.1:8000/docs
 ```
 
+OpenAPI JSON
+
+```
+http://127.0.0.1:8000/openapi.json
+```
+
 ---
 
 ## Running Tests
 
+Run all tests.
+
 ```bash
 python -m pytest
+```
+
+### Current Test Status
+
+```
+8 Tests Passed
 ```
 
 ---
@@ -294,16 +336,23 @@ GET
 
 ## Future Enhancements
 
-- Category Discount
-- Buy X Get Y Discount
+- Category-based Discount Engine
+- Buy X Get Y Discount Engine
 - Configurable Discount Priority
-- Feature Flags
-- Caching
-- Rate Limiting
+- Promotion Versioning
 - Audit Trail
+- Redis Caching
+- Feature Flags
+- Rate Limiting
 
 ---
 
 ## Author
 
-Developed as part of the ShopperStop Backend Engineering Take Home Assignment.
+Developed by **Pranavi Choudarapally** as part of the ShopperStop Backend Engineering Take Home Assignment.
+
+---
+
+## License
+
+This project was developed for educational and evaluation purposes as part of the ShopperStop Backend Engineering Take Home Assignment.
