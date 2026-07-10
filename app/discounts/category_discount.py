@@ -1,38 +1,32 @@
-def calculate_category_discount(cart_items, promotions):
+from app.config.settings import CATEGORY_DISCOUNTS
+
+
+def calculate_category_discount(cart_items):
 
     total_discount = 0
+
     applied_discounts = []
 
-    for promotion in promotions:
+    for item in cart_items:
 
-        if promotion.discount_type.upper() != "CATEGORY":
-            continue
+        category = item.category
 
-        if not promotion.category:
-            continue
+        if category in CATEGORY_DISCOUNTS:
 
-        for item in cart_items:
+            discount_rate = CATEGORY_DISCOUNTS[category]
 
-            if item.category.upper() == promotion.category.upper():
+            item_total = item.quantity * item.unit_price
 
-                item_total = item.quantity * item.unit_price
+            discount = (item_total * discount_rate) / 100
 
-                discount = (
-                    item_total * promotion.discount_value
-                ) / 100
+            total_discount += discount
 
-                total_discount += discount
+            applied_discounts.append({
+                "type": "CATEGORY",
+                "name": f"{category} Category Discount",
+                "category": category,
+                "rate": f"{discount_rate}%",
+                "discount_amount": round(discount, 2)
+            })
 
-                applied_discounts.append({
-
-                    "type": "CATEGORY",
-
-                    "name": promotion.name,
-
-                    "category": promotion.category,
-
-                    "discount_amount": round(discount, 2)
-
-                })
-
-    return total_discount, applied_discounts
+    return round(total_discount, 2), applied_discounts

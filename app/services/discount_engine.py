@@ -1,15 +1,26 @@
 from app.discounts.slab_discount import calculate_slab_discount
+from app.discounts.category_discount import calculate_category_discount
 from app.discounts.happy_hour_discount import calculate_happy_hour_discount
+
 from app.models.coupon import Coupon
 from app.models.promotion import Promotion
+
 from app.config.settings import DISCOUNT_CONFIG
 
+from app.promotions.dispatcher import PromotionDispatcher
 
-def calculate_discount(amount: float, tier: str, coupon_code: str, db):
 
-    # -------------------------
+def calculate_discount(
+    amount: float,
+    tier: str,
+    cart_items,
+    coupon_code: str,
+    db
+):
+
+    # ---------------------------------------
     # Slab Discount
-    # -------------------------
+    # ---------------------------------------
 
     slab_result = calculate_slab_discount(amount, tier)
 
@@ -25,9 +36,27 @@ def calculate_discount(amount: float, tier: str, coupon_code: str, db):
         "breakdown": slab_result["breakdown"]
     })
 
-    # -------------------------
-    # Promotion Discount
-    # -------------------------
+    # ---------------------------------------
+    # Category Discount
+    # ---------------------------------------
+
+    category_discount, category_discounts = calculate_category_discount(
+        cart_items
+    )
+
+    if category_discount > 0:
+
+        total_discount += category_discount
+
+        net_amount -= category_discount
+
+        discount_list.extend(category_discounts)
+
+    # ---------------------------------------
+    # Promotion Framework
+    # ---------------------------------------
+
+    dispatcher = PromotionDispatcher()
 
     promotions = db.query(Promotion).filter(
         Promotion.active == True
@@ -35,32 +64,29 @@ def calculate_discount(amount: float, tier: str, coupon_code: str, db):
 
     for promotion in promotions:
 
-        if amount >= promotion.minimum_purchase:
+        result = dispatcher.process(
 
-            promotion_discount = 0
+            promotion=promotion,
 
-            if promotion.discount_type.upper() == "FLAT":
+            cart_items=cart_items,
 
-                promotion_discount = promotion.discount_value
+            amount=amount,
 
-            elif promotion.discount_type.upper() == "PERCENTAGE":
+            net_amount=net_amount
 
-                promotion_discount = (
-                    net_amount * promotion.discount_value
-                ) / 100
+        )
 
-            total_discount += promotion_discount
-            net_amount -= promotion_discount
+        total_discount += result["discount"]
 
-            discount_list.append({
-                "type": "PROMOTION",
-                "name": promotion.name,
-                "discount_amount": round(promotion_discount, 2)
-            })
+        net_amount = result["net_amount"]
 
-    # -------------------------
+        discount_list.extend(
+            result["discounts"]
+        )
+
+    # ---------------------------------------
     # Coupon Discount
-    # -------------------------
+    # ---------------------------------------
 
     if coupon_code:
 
@@ -84,23 +110,31 @@ def calculate_discount(amount: float, tier: str, coupon_code: str, db):
                 ) / 100
 
             total_discount += coupon_discount
+
             net_amount -= coupon_discount
 
             discount_list.append({
+
                 "type": "COUPON",
+
                 "name": coupon.code,
+
                 "discount_amount": round(coupon_discount, 2)
+
             })
 
-    # -------------------------
+    # ---------------------------------------
     # Happy Hour Discount
-    # -------------------------
+    # ---------------------------------------
 
-    happy_hour_discount = calculate_happy_hour_discount(net_amount)
+    happy_hour_discount = calculate_happy_hour_discount(
+        net_amount
+    )
 
     if happy_hour_discount > 0:
 
         total_discount += happy_hour_discount
+
         net_amount -= happy_hour_discount
 
         discount_list.append({
@@ -109,31 +143,45 @@ def calculate_discount(amount: float, tier: str, coupon_code: str, db):
 
             "name": "Happy Hour Discount",
 
-            "discount_amount": round(happy_hour_discount, 2)
+            "discount_amount": round(
+                happy_hour_discount,
+                2
+            )
 
         })
 
-    # -------------------------
+    # ---------------------------------------
     # Maximum Discount Cap
-    # -------------------------
+    # ---------------------------------------
 
     max_discount = (
-        amount
-        * DISCOUNT_CONFIG["maximum_discount_percentage"]
+        amount *
+        DISCOUNT_CONFIG["maximum_discount_percentage"]
     ) / 100
 
     if total_discount > max_discount:
 
         total_discount = max_discount
+
         net_amount = amount - max_discount
+
+    # ---------------------------------------
+    # Final Response
+    # ---------------------------------------
 
     return {
 
         "gross_amount": amount,
 
-        "discount": round(total_discount, 2),
+        "discount": round(
+            total_discount,
+            2
+        ),
 
-        "net_amount": round(net_amount, 2),
+        "net_amount": round(
+            net_amount,
+            2
+        ),
 
         "discounts_applied": discount_list
 

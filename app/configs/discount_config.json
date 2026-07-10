@@ -43,12 +43,21 @@
 
   "discount_priority": [
     "SLAB",
+    "CATEGORY",
     "PROMOTION",
     "COUPON",
-    "CATEGORY",
     "HAPPY_HOUR",
     "BUY_X_GET_Y"
   ],
+
+  "stacking_rules": {
+    "SLAB": true,
+    "CATEGORY": true,
+    "PROMOTION": true,
+    "COUPON": true,
+    "HAPPY_HOUR": true,
+    "BUY_X_GET_Y": true
+  },
 
   "maximum_discount_percentage": 40,
 

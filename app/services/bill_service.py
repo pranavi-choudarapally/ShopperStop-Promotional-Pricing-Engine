@@ -20,11 +20,12 @@ class BillService:
                 total_amount += item.quantity * item.unit_price
 
             result = calculate_discount(
-                amount=total_amount,
-                tier=request.customer.tier,
-                coupon_code=request.coupon_code,
-                db=db
-            )
+    amount=total_amount,
+    tier=request.customer.tier,
+    cart_items=request.cart.items,
+    coupon_code=request.coupon_code,
+    db=db
+)
 
             savings_percentage = 0
 
