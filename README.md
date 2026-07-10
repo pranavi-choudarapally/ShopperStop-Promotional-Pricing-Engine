@@ -1,16 +1,19 @@
 # ShopperStop Promotional Pricing Engine
 
-## Overview
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.139-green)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-orange)
+![SQLite](https://img.shields.io/badge/Database-SQLite-blue)
+![Docker](https://img.shields.io/badge/Docker-Supported-2496ED)
+![Pytest](https://img.shields.io/badge/Testing-Pytest-success)
 
-The ShopperStop Promotional Pricing Engine is a RESTful backend application developed using FastAPI. It provides a flexible and extensible discount calculation engine that allows retailers to configure and apply different promotional discounts without changing application code.
-
-The system supports customer-tier discounts, promotional campaigns, coupons, simulation of discounts, configurable business rules, health monitoring, logging, and detailed bill calculation.
+A configurable retail discount engine built using **FastAPI** that enables retailers to create and manage promotional campaigns, customer tier discounts, coupons, and bill calculations through REST APIs.
 
 ---
 
-## Features
+# Features
 
-### Bill Calculation
+## Bill Calculation
 
 - Progressive slab-based discount calculation
 - Customer Tier support
@@ -20,68 +23,80 @@ The system supports customer-tier discounts, promotional campaigns, coupons, sim
 - Savings summary
 - Bill ID generation
 
-### Promotion Management
+---
+
+## Promotion Management
 
 - Create Promotion
 - View Promotions
+- Get Promotion by ID
 - Update Promotion
 - Delete Promotion
 - Activate Promotion
 - Deactivate Promotion
 
-### Coupon Management
+---
+
+## Coupon Management
 
 - Create Coupon
 - View Coupons
 - Update Coupon
 - Delete Coupon
 
-### Customer Tier Management
+---
+
+## Customer Tier Management
 
 - Create Customer Tier
 - View Customer Tiers
 - Update Customer Tier
 
-### Simulation
+---
+
+## Simulation
 
 - Preview discount calculation without generating a bill
 
-### Additional Discounts
+---
+
+## Additional Discounts
 
 - Promotional Discounts
 - Coupon Discounts
+- Category Discounts
 - Happy Hour Discount
 - Maximum Discount Cap
 
-### Configuration
+---
 
-- Configurable discount settings using JSON
-- Customer Tier configuration
-- Maximum Discount Cap configuration
-
-### Health Monitoring
+## Health Monitoring
 
 - Health Check API
 - Database Connectivity Check
 
-### Logging
+---
+
+## Logging
 
 - Application Logs
 - Bill Generation Logs
 
-### Testing
+---
+
+## Testing
 
 - Unit Tests
-- Integration Tests
+- API Integration Tests
 
 ---
 
-## Tech Stack
+# Technology Stack
 
 - Python 3.12
 - FastAPI
 - SQLAlchemy
-- SQLite (Embedded Database)
+- SQLite
 - Pydantic
 - Uvicorn
 - Pytest
@@ -89,31 +104,7 @@ The system supports customer-tier discounts, promotional campaigns, coupons, sim
 
 ---
 
-## Architecture
-
-The application follows a layered architecture.
-
-```
-Client
-   │
-   ▼
-FastAPI Routers
-   │
-   ▼
-Service Layer
-   │
-   ▼
-Discount Engine
-   │
-   ▼
-SQLite Database
-```
-
-This architecture separates routing, business logic, validation, and persistence, making the application modular, maintainable, and easy to extend.
-
----
-
-## Project Structure
+# Project Structure
 
 ```
 SHOPPER_STOP
@@ -131,36 +122,41 @@ SHOPPER_STOP
 │
 ├── tests
 ├── logs
+│
 ├── requirements.txt
 ├── Dockerfile
 ├── docker-compose.yml
 ├── README.md
+├── DESIGN.md
+├── TESTING.md
+├── ASSUMPTIONS.md
+├── SUBMISSION.md
 └── shopperstop.db
 ```
 
 ---
 
-## Installation
+# Installation
 
-Clone the repository.
+## Clone Repository
 
 ```bash
 git clone https://github.com/pranavi-choudarapally/ShopperStop-Promotional-Pricing-Engine.git
 ```
 
-Move into the project.
+## Move into Project
 
 ```bash
 cd ShopperStop-Promotional-Pricing-Engine
 ```
 
-Create a virtual environment.
+## Create Virtual Environment
 
 ```bash
 python -m venv venv
 ```
 
-Activate the virtual environment.
+## Activate Virtual Environment
 
 ### Windows
 
@@ -168,7 +164,13 @@ Activate the virtual environment.
 venv\Scripts\activate
 ```
 
-Install dependencies.
+### Linux / macOS
+
+```bash
+source venv/bin/activate
+```
+
+## Install Dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -176,183 +178,170 @@ pip install -r requirements.txt
 
 ---
 
-## Run Application
+# Run the Application
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-Swagger UI
+Application:
+
+```
+http://127.0.0.1:8000
+```
+
+Swagger UI:
 
 ```
 http://127.0.0.1:8000/docs
 ```
 
-OpenAPI JSON
+ReDoc:
 
 ```
-http://127.0.0.1:8000/openapi.json
+http://127.0.0.1:8000/redoc
 ```
 
 ---
 
-## Running Tests
-
-Run all tests.
+# Running Tests
 
 ```bash
 python -m pytest
 ```
 
-### Current Test Status
+---
 
-```
-8 Tests Passed
+# Available APIs
+
+## Bills
+
+| Method | Endpoint |
+|---------|----------|
+| POST | `/api/v1/bills/calculate` |
+
+---
+
+## Promotions
+
+| Method | Endpoint |
+|---------|----------|
+| POST | `/api/v1/promotions` |
+| GET | `/api/v1/promotions` |
+| GET | `/api/v1/promotions/{id}` |
+| PUT | `/api/v1/promotions/{id}` |
+| DELETE | `/api/v1/promotions/{id}` |
+| POST | `/api/v1/promotions/{id}/activate` |
+| POST | `/api/v1/promotions/{id}/deactivate` |
+
+---
+
+## Coupons
+
+| Method | Endpoint |
+|---------|----------|
+| POST | `/api/v1/coupons` |
+| GET | `/api/v1/coupons` |
+| PUT | `/api/v1/coupons/{id}` |
+| DELETE | `/api/v1/coupons/{id}` |
+
+---
+
+## Customer Tiers
+
+| Method | Endpoint |
+|---------|----------|
+| POST | `/api/v1/customer-tiers` |
+| GET | `/api/v1/customer-tiers` |
+| PUT | `/api/v1/customer-tiers/{id}` |
+
+---
+
+## Simulation
+
+| Method | Endpoint |
+|---------|----------|
+| POST | `/api/v1/promotions/simulate` |
+
+---
+
+## Health
+
+| Method | Endpoint |
+|---------|----------|
+| GET | `/api/v1/health` |
+
+---
+
+# Example Response
+
+```json
+{
+  "bill_id": "BILL-20260709212226",
+  "customer_id": "CUST001",
+  "gross_amount": 15000,
+  "total_discount": 6000,
+  "net_amount": 9000,
+  "discounts_applied": [
+    {
+      "type": "SLAB_BASED",
+      "discount_amount": 3000
+    },
+    {
+      "type": "CATEGORY",
+      "discount_amount": 2250
+    },
+    {
+      "type": "PROMOTION",
+      "discount_amount": 500
+    },
+    {
+      "type": "COUPON",
+      "discount_amount": 1000
+    }
+  ]
+}
 ```
 
 ---
 
-## Available APIs
+# Future Enhancements
 
-### Bills
-
-POST
-
-```
-/api/v1/bills/calculate
-```
-
----
-
-### Promotions
-
-POST
-
-```
-/api/v1/promotions
-```
-
-GET
-
-```
-/api/v1/promotions
-```
-
-PUT
-
-```
-/api/v1/promotions/{id}
-```
-
-DELETE
-
-```
-/api/v1/promotions/{id}
-```
-
-Activate
-
-```
-/api/v1/promotions/{id}/activate
-```
-
-Deactivate
-
-```
-/api/v1/promotions/{id}/deactivate
-```
-
----
-
-### Coupons
-
-POST
-
-```
-/api/v1/coupons
-```
-
-GET
-
-```
-/api/v1/coupons
-```
-
-PUT
-
-```
-/api/v1/coupons/{id}
-```
-
-DELETE
-
-```
-/api/v1/coupons/{id}
-```
-
----
-
-### Customer Tier
-
-POST
-
-```
-/api/v1/customer-tiers
-```
-
-GET
-
-```
-/api/v1/customer-tiers
-```
-
-PUT
-
-```
-/api/v1/customer-tiers/{id}
-```
-
----
-
-### Simulation
-
-POST
-
-```
-/api/v1/promotions/simulate
-```
-
----
-
-### Health
-
-GET
-
-```
-/api/v1/health
-```
-
----
-
-## Future Enhancements
-
-- Category-based Discount Engine
-- Buy X Get Y Discount Engine
+- Buy X Get Y Discount
 - Configurable Discount Priority
 - Promotion Versioning
 - Audit Trail
-- Redis Caching
 - Feature Flags
+- Caching
 - Rate Limiting
+- Event-driven Promotion Lifecycle
+- Rule Engine
+- Multi-store Promotion Support
 
 ---
 
-## Author
+# Documentation
 
-Developed by **Pranavi Choudarapally** as part of the ShopperStop Backend Engineering Take Home Assignment.
+Additional documentation included in this repository:
+
+- README.md
+- DESIGN.md
+- TESTING.md
+- ASSUMPTIONS.md
+- SUBMISSION.md
 
 ---
 
-## License
+# Repository
 
-This project was developed for educational and evaluation purposes as part of the ShopperStop Backend Engineering Take Home Assignment.
+GitHub Repository:
+
+**https://github.com/pranavi-choudarapally/ShopperStop-Promotional-Pricing-Engine**
+
+---
+
+# Author
+
+**Pranavi Choudarapally**
+
+Developed as part of the ShopperStop Backend Engineering Take-Home Assignment using **FastAPI**, **SQLAlchemy**, **SQLite**, **Docker**, and **Pytest**.
